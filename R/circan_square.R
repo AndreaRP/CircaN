@@ -1,8 +1,38 @@
+#' arccot
+#'
+#' Arc cotangent function. Auxiliary to the square wave function.
+#' @param x integer to compute the arc cotangent on.
+#' @keywords arccot
+#' @export
+#' @examples
+#' arccot(x=2pi)
 arccot <- function(x){
   y = atan(1/x)
   return(y)
 }
 
+
+#' circan_square
+#'
+#' Fit to a square curve in the frame of a nonlinear least squares model for accurate detection of circadian expression patterns.
+#' @param data Dataframe containing the expression data. Samples must be in columns and genes in rows.
+#' For an example see data(expression_example).
+#' @param s2c Dataframe containing the metadata for the samples. Must have at least a 'sample' column
+#' with the sample name as it appears in the data matrix;
+#' a 'time' column with the time point the sample was collected;
+#' and an 'ind' column containing information for the individual the sample comes from.
+#' For an example see data(metadata_example).
+#' @param shiny Is the package running in a shiny app? default to FALSE.
+#' @param mode Algorithm to use in the NLS regression. Must be one of 'default' for Gauss-Newton, 'plinear' for the Golub-Pereyra algorithm
+#' for partially linear least-squares models and 'port' for the ‘nl2sol’ algorithm from the Port library. Default is default. See nls documentation
+#' for extended info.
+#' @param init_value Initial value for the period. Default is set to 24.
+#' @param max_per Maximum period to regress. Default is set to Inf.
+#' @param min_per Minimum period to regress. Default is set to -Inf.
+#' @keywords CircaN circadian regression
+#' @export
+#' @examples
+#' circan_square(data=expression_example, s2c=metadata_example, mode="port")
 circan_square <- function(data, s2c, shiny = FALSE, mode = "default", init_value = 24,
                        max_per = Inf, min_per = -Inf) {
   #############################
@@ -71,7 +101,7 @@ circan_square <- function(data, s2c, shiny = FALSE, mode = "default", init_value
       names(akaike) <- c("AIC", "BIC")
       r <- cor(gd$data, predict(nls.model))
     }, error = function(e1) {
-      convergence_error1 <- grepl("Convergence failure|the inverse cannot be computed", 
+      convergence_error1 <- grepl("Convergence failure|the inverse cannot be computed",
                                   as.character(e1))
       if (convergence_error1) {
         tryCatch({ # Fix period
@@ -102,7 +132,7 @@ circan_square <- function(data, s2c, shiny = FALSE, mode = "default", init_value
 
           r <<- cor(gd$data, predict(nls.model))
         }, error = function(e2) {
-          convergence_error2 <- grepl("Convergence failure|the inverse cannot be computed", 
+          convergence_error2 <- grepl("Convergence failure|the inverse cannot be computed",
                                       as.character(e2))
           if (convergence_error2) {
             vec <<- rep("NA", times = ncol(results) - 4)
