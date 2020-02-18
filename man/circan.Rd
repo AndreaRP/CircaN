@@ -6,17 +6,7 @@
 \usage{
 circan(
   data,
-  s2c,
-  shiny = FALSE,
-  mode = "default",
-  init_value = 24,
-  max_per = Inf,
-  min_per = -Inf
-)
-
-circan(
-  data,
-  s2c,
+  meta,
   shiny = FALSE,
   mode = "default",
   init_value = 24,
@@ -28,7 +18,7 @@ circan(
 \item{data}{Dataframe containing the expression data. Samples must be in columns and genes in rows.
 For an example see data(expression_example).}
 
-\item{s2c}{Dataframe containing the metadata for the samples. Must have at least a 'sample' column
+\item{meta}{Dataframe containing the metadata for the samples. Must have at least a 'sample' column
 with the sample name as it appears in the data matrix;
 a 'time' column with the time point the sample was collected;
 and an 'ind' column containing information for the individual the sample comes from.
@@ -45,23 +35,13 @@ for extended info.}
 \item{max_per}{Maximum period to regress. Default is set to Inf.}
 
 \item{min_per}{Minimum period to regress. Default is set to -Inf.}
-
-\item{meta}{Dataframe containing the metadata for the samples. Must have at least a 'sample' column
-with the sample name as it appears in the data matrix;
-a 'time' column with the time point the sample was collected;
-and an 'ind' column containing information for the individual the sample comes from.
-For an example see data(metadata_example).}
 }
 \description{
-Nonlinear least squares model for accurate detection of circadian expression patterns.
-
 Nonlinear least squares model for accurate detection of circadian expression patterns.
 }
 \examples{
 # This runs CircaN on the example data with the 'Port' algorithm.
 circan(data=expression_example, meta=metadata_example, mode="port")
-# This runs CircaN on the example data with the 'Port' algorithm.
-circan(data=expression_example, s2c=metadata_example, mode="port")
 }
 \keyword{CircaN}
 \keyword{circadian}

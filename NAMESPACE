@@ -2,7 +2,6 @@
 
 export(best_fit_select)
 export(circan)
-export(circan_groups)
 export(circan_sine)
 export(data_summary)
 export(fisher_method)
