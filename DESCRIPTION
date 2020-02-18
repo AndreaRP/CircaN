@@ -1,13 +1,14 @@
 Package: CircaN
-Title: A statistical framework for accurate detection of circadian genes in mammalian systems
+Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
-Authors@R: person("Andrea", "Rubio-Ponce", email = "arubio@cnic.es", role = c("aut", "cre"))
-Description: Nonlinear mixed models for accurate detection of circadian genes in real experimental setups with limited sampling.
+Authors@R: 
+    person(given = "First",
+           family = "Last",
+           role = c("aut", "cre"),
+           email = "first.last@example.com",
+           comment = c(ORCID = "YOUR-ORCID-ID"))
+Description: What the package does (one paragraph).
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 6.1.1
-Imports:
-	nlme,
-	broom,
-	dplyr
+RoxygenNote: 7.0.2

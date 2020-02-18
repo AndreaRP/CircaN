@@ -4,9 +4,20 @@
 \alias{circan_groups}
 \title{circan_groups}
 \usage{
-circan_groups(data, s2c, id_col, sample_col, time_col, group_col, ind_col,
-  shiny = FALSE, mode = "default", init_value = 24, max_per = Inf,
-  min_per = -Inf)
+circan_groups(
+  data,
+  s2c,
+  id_col,
+  sample_col,
+  time_col,
+  group_col,
+  ind_col,
+  shiny = FALSE,
+  mode = "default",
+  init_value = 24,
+  max_per = Inf,
+  min_per = -Inf
+)
 }
 \arguments{
 \item{data}{Dataframe containing the expression data of samples from both groups. Samples must be in columns and genes in rows.}
