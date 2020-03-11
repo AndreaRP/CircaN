@@ -12,7 +12,7 @@ supress_na_warning <- function(w) if( any(grepl( "NAs introduced by coercion", w
 
 #' best_fit_select
 #'
-#' Obtains the curve form from a series of fit results that fit best each feature. 
+#' Obtains the curve form from a series of fit results that fit best each feature.
 #' @param results_list A list of datasets with different regression results
 #' @keywords NA, regression
 #' @export
@@ -104,11 +104,15 @@ best_fit_select <- function(results_list){
 statistics_calc <- function(detected_genes, real_positive, real_negative){
   # Check how many genes overlap between predicted and real
   tp <-  Reduce(intersect, list(real_positive, detected_genes))
-  fp <- detected_genes[detected_genes %!in% real_positive]
-  fn <- real_positive[real_positive %!in% detected_genes]
-  tn <- real_negative[real_negative %!in% detected_genes]
-  
+  # fp <- detected_genes[detected_genes %!in% real_positive]
+  fp <- base::setdiff(detected_genes, real_positive)
+  # fn <- real_positive[real_positive %!in% detected_genes]
+  fn <- base::setdiff(real_positive, detected_genes)
+  # tn <- real_negative[real_negative %!in% detected_genes]
+  tn <- base::setdiff(real_negative, detected_genes)
+
   df <- data.frame(rbind(tp=length(tp), fp=length(fp),fn=length(fn), tn=length(tn)))
+  colnames(df) <- "statistics"
   return(df)
 }
 
@@ -152,7 +156,7 @@ fisher_method <- function(x){
     p <- ifelse(all(is.na(x)), NA, x[!is.na(x)])
   }
   return(p)
-} 
+}
 
 
 #' get_fisher
@@ -262,6 +266,6 @@ get_fisher <- function(...){
 #   }
 #   return(best_fit_results)
 # }
-# 
+#
 
 

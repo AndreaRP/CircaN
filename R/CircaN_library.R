@@ -39,7 +39,6 @@ circan <- function(data, meta, shiny=FALSE, mode="default", init_value=24, max_p
   results_list <- grep(glob2rx("circan*results"), ls(), value=TRUE)
   # Select best fitting curve
   circan_results <- best_fit_select(results_list=mget(results_list))
-  
   circan_results$combined_pval <- get_fisher(as.numeric(circan_results$p.value.amp), as.numeric(circan_results$p.value.per))
   circan_results$BH_combined <- p.adjust(as.numeric(circan_results$combined_pval), method = "BH")
   return(circan_results)
