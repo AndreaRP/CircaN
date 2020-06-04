@@ -177,95 +177,90 @@ get_fisher <- function(...){
   return(ps)
 }
 
-# best_fit_select <- function(...){
-#   args_list <- list(...)
-#   print("#############")
-#   print(length(args_list))
-#   print(class(args_list))
-#   print("#############")
-#   n_features <- NA
-#   # Checks if the input is file or data
-#   for (a in args_list){
-#     print("#############")
-#     print(names(a))
-#     print("#############")
-#     if(grepl(".csv", a)){
-#       temp_name <- sapply(strsplit(a, "\\."), "[[", 1)
-#       # temp <- read.csv(paste("./data/results/", a, sep=""), stringsAsFactors = F)[1:20,]#######
-#     }else{
-#       temp_name <- a
-#       temp <- get(a)
-#     }
-#     if(is.na(n_features)){
-#       n_features <- nrow(temp)
-#     }else{
-#       if(n_features != nrow(temp)){
-#         stop("The datasets provided have different number of rows")
-#       }
-#     }
-#     assign(temp_name, temp, envir = .GlobalEnv)
-#   }
-#   # Once everything is loaded, we loop through the features searching for the best AIC
-#   best_fit_results <- data.frame()
-#   fit_data_colnames <- c("feature", "estimate.amp", "p.value.amp", "BH.q.value.amp"
-#                          , "estimate.phase", "p.value.phase", "BH.q.value.phase"
-#                          , "estimate.per", "p.value.per", "BH.q.value.per"
-#                          , "AIC", "BIC", "r", "best_curve")
-#   # global results data
-#   best_fit_results <- setNames(data.frame(matrix(ncol = length(fit_data_colnames), nrow = 0))
-#                       , fit_data_colnames
-#   )
-#   # print(n_features)
-#   for(f in 1:n_features){
-#     # print(paste("feature ", f)) ####
-#     minimum_aic <- Inf
-#     best_adjust <- c(NA)
-#     feature_name <- NA
-#     # feat_name <- (NA)########
-#     for (a in args_list){
-#       # print(a) ####
-#       temp_name <- sapply(strsplit(a, "\\."), "[[", 1)
-#       temp <- get(temp_name)[f,]
-#       current_aic <- as.numeric(temp["AIC"])
-#       # if(is.na(feat_name) & as.character(temp["feature"])!=feat_name) feat_name <- as.character(temp["feature"])########
-#       feature_name <- temp["feature"]
-#       if(!is.na(current_aic) & current_aic < minimum_aic){
-#         # algorithm <- paste(rev(rev(unlist(strsplit(a, "_")))[-c(1:3)]), collapse="_")
-#         algorithm <- paste(unlist(strsplit(a, "_"))[c(1:2)], collapse="_")
-#         assign("best_adjust", c(temp, "best_curve"=algorithm))
-#         minimum_aic <- current_aic
-#       }
-#       best_adjust <- unlist(best_adjust)
-#     }
-#     # Individual gene data
-#     df <- setNames(data.frame(matrix(ncol = length(fit_data_colnames), nrow = 0))
-#                    , fit_data_colnames
-#     )
-#     # print(paste("feature ", feature_name))
-#     # Add the results from the best fit, if found
-#     if (all(is.na(best_adjust))){
-#       df <- base::rbind(df, c(feature_name, rep("NA", (length(fit_data_colnames)-1))))
-#       df <- setNames(df, fit_data_colnames)
-#       best_fit_results <- base::rbind(best_fit_results, df, stringsAsFactors=F, make.row.names = F)
-#       best_fit_results <- setNames(best_fit_results, fit_data_colnames)
-#       # print(best_fit_results)
-#     }else{
-#       df <- best_adjust[fit_data_colnames]
-#       # print(df)#######
-#       df <- setNames(df, fit_data_colnames)
-#       df <- t(as.data.frame((df)))
-#       best_fit_results <- base::rbind(best_fit_results, df, stringsAsFactors=F, make.row.names = F)
-#       # print("best_fit_results Not NA") ####
-#       # print(data.frame(best_fit_results), na.print = "NA2") ####
-#     }
-#   }
-#   # Remove all datasets from envir
-#   for (a in args_list){
-#     temp_name <- sapply(strsplit(a, "\\."), "[[", 1)
-#     rm(temp_name, envir =.GlobalEnv)
-#   }
-#   return(best_fit_results)
-# }
-#
+
+#' meta2d_wrapper
+#'
+#' Wraps the meta 2d method with JTK + LS and returns a data frame with the results. The period is set between 20 and 28h.
+#' @param data The data matrix with the omics data.
+#' @param timepoints numeric vector containing the timepoints corresponding to each column in data.
+#' @param cycMethod a character vector(length 1 or 2 or 3). User-defined methods for detecting rhythmic signals, must be
+#' selected as any one, any two or all three methods(default) from "ARS"(ARSER), "JTK"(JTK_CYCLE) and "LS"(Lomb-Scargle).
+#' @keywords metacycle, meta2d
+#' @export
+#' @examples
+#' meta2d_results <- meta2d_wrapper(my_data, s2c$time)
+meta2d_wrapper <- function(data, timepoints, min_per=20, max_per=28, cycMethod = c("LS", "JTK")){
+  data_name <- deparse(substitute(data))
+  write.csv(data, paste("./", data_name, ".csv", sep=""))
+  meta_name <- deparse(substitute(meta_file))
+  meta2d(infile=paste("./", data_name, ".csv", sep="")
+         , outdir = "./"
+         , filestyle="csv"
+         , timepoints = as.numeric(timepoints)
+         , minper = min_per
+         , maxper = max_per
+         , cycMethod = cycMethod
+         , analysisStrategy = "auto"
+         , outputFile = TRUE
+         , outIntegration = "both"
+         , adjustPhase = "predictedPer"
+         , combinePvalue = "fisher"
+         , weightedPerPha = FALSE
+         , ARSmle = "auto"
+         , ARSdefaultPer = 24
+         , outRawData = FALSE
+         , releaseNote = TRUE
+         , outSymbol = "")
+  # Move results
+  file.remove(paste("./LSresult_",data_name,".csv", sep=""))
+  meta2d_results <- read.csv(paste("./meta2d_",data_name,".csv", sep=""))
+  file.remove(paste("./meta2d_",data_name,".csv", sep=""))
+  return(meta2d_results)
+}
 
 
+
+#' jtk_wrapper
+#'
+#' Wraps JTK method. The period is set between 20 and 28h.
+#' @param data The data matrix with the omics data.
+#' @param s2c Data frame with at least the columns sample (which must coincide with the samples in data) and time (recording
+#' time corresponding to each sample.
+#' @keywords jtk
+#' @export
+#' @examples
+#' jtk_results <- jtk_wrapper(my_data, s2c)
+jtk_wrapper <- function(data, s2c, min_per=20, max_per=28){
+  annot <- data.frame(Probeset=rownames(data))
+  timepoints <- length(unique(s2c$time))
+  nrep <- unique(table(s2c$time))
+  lag <- unique(diff(as.numeric(unique(s2c$time))))
+  data <- data[,s2c$sample]
+
+  jtkdist(timepoints, nrep) # total time points, # replicates per time point
+
+  periods <- ceiling(min_per/lag):round(max_per/lag) # number of time points per cycle. (10/6=; 20/6)
+  # cat(timepoints, nrep, lag, periods)
+  jtk.init(periods, lag)  # 4 is the number of hours between time points
+
+  res <- apply(data,1,function(z) {
+    jtkx(z)
+    c(JTK.ADJP,JTK.PERIOD,JTK.LAG,JTK.AMP)
+  })
+  res <- as.data.frame(t(res))
+  bhq <- p.adjust(unlist(res[,1]),"BH")
+  res <- cbind(bhq,res)
+  colnames(res) <- c("BH.Q","ADJ.P","PER","LAG","AMP")
+  results_jtk <- cbind(annot,res,data)
+  results_jtk <- results_jtk[order(res$ADJ.P,-res$AMP),]
+  return(results_jtk)
+}
+
+
+cbind.fill <- function(...){
+  nm <- list(...)
+  nm <- lapply(nm, as.matrix)
+  n <- max(sapply(nm, nrow))
+  do.call(cbind, lapply(nm, function (x)
+    rbind(x, matrix(, n-nrow(x), ncol(x)))))
+}

@@ -1,14 +1,20 @@
 Package: CircaN
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Title: Identification Of Circadian Patterns In Omics Data
+Version: 2.0.0
 Authors@R: 
-    person(given = "First",
-           family = "Last",
+    person(given = "Andrea",
+           family = "Rubio-Ponce",
            role = c("aut", "cre"),
-           email = "first.last@example.com",
+           email = "arubio@cnic.es",
            comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+Description: CircaN identifies rhythmic patterns in omics data by fitting several curve types: 
+    Cosine, cosine + linear, cosine + exponential,squared cosine, triangular, peakand dampened 
+    cosine. The package also is able to run JTK and Metacycle in order to produce an integrated
+    results file.
 License: What license it uses
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.0.2
+Imports:
+    dplyr,
+    MetaCycle
