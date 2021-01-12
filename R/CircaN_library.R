@@ -79,9 +79,8 @@ full_mode_analysis <- function(data, s2c, algorithms = c("circan", "jtk", "metac
   # circan_files <- paste("/data3/arubio/src/dependencies/CircaN/"
   #                     , list.files(paste("/data3/arubio/src/dependencies/CircaN/", sep ="")), sep="")
   # sapply(circan_files, source)
-  library("plyr")
+  library("dplyr")
   ################
-
   results <- data.frame()
   if(any(grepl("circan", tolower(algorithms), fixed = TRUE))){
     data_aux <- data
@@ -98,8 +97,6 @@ full_mode_analysis <- function(data, s2c, algorithms = c("circan", "jtk", "metac
   }
   if(any(grepl("jtk", tolower(algorithms), fixed = TRUE))){
     cat("Running JTK")
-    data <- co_data[1:100,]
-    s2c <- co_meta
     jtk_results <- jtk_wrapper(data = data, s2c = s2c, min_per = min_per, max_per = max_per)
     jtk_results <- jtk_results[order(jtk_results[,1]),]
     colnames(jtk_results)[-1] <- paste("jtk", colnames(jtk_results[,-1]), sep="_")
