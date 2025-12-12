@@ -52,3 +52,9 @@ CircaN will fit each feature in your data to 7 different oscilating patterns and
 For details on JTK (DOI: 10.1177/0748730410379711) and MetaCycle (DOI: 10.1093/bioinformatics/btw405), please refer to:
 JTK: https://openwetware.org/wiki/HughesLab:JTK_Cycle    
 MetaCycle: https://cran.r-project.org/web/packages/MetaCycle/vignettes/implementation.html    
+
+## Citation
+
+Rubio-Ponce, A., Ballesteros, I., Quintana, J. A., Solanas, G., Benitah, S. A., Hidalgo, A., & Sánchez-Cabo, F. (2021). Combined statistical modeling enables accurate mining of circadian transcription. NAR Genomics and Bioinformatics, 3(2), lqab031. https://doi.org/10.1093/nargab/lqab031
+
+
